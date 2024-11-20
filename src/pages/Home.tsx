@@ -1,11 +1,31 @@
-function Home() {
+import { Button } from "@components/shadcn/Button";
+import { GoogleAuthProvider, signInWithPopup } from "@firebase/auth";
+import { useToast } from "@hooks/shadcn/useToast";
+import { auth } from "@libs/firebase";
+
+const provider = new GoogleAuthProvider();
+export default function Home(): JSX.Element {
+  const { toast } = useToast();
+  async function handleLogin() {
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error(
+        new Error("Failed to login with Google: ", { cause: error })
+      );
+
+      toast({
+        description: "Gagal login menggunakan akun Google",
+        variant: "destructive",
+      });
+    }
+  }
+
   return (
     <>
-      <h1 className="text-blue-600 font-bold text-2xl text-center">
-        Home Page
-      </h1>
+      <Button onClick={handleLogin} variant="outline">
+        Login With Google
+      </Button>
     </>
   );
 }
-
-export default Home;
