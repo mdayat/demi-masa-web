@@ -16,6 +16,9 @@ function useAxios() {
       const axiosInstance = axios.create({
         signal: controller.signal,
         baseURL: "http://localhost",
+        validateStatus: (status) => {
+          return status >= 200 && status < 500;
+        },
       });
 
       axiosRetry(axiosInstance, {
