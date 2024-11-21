@@ -10,6 +10,7 @@ export default function Home(): JSX.Element {
     try {
       await signInWithPopup(auth, provider);
     } catch (error) {
+      console.error(new Error("failed to login with Google", { cause: error }));
       if (error instanceof Error) {
         toast({
           description: error.message,

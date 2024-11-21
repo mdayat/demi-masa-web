@@ -6,6 +6,7 @@ import { useAxios } from "@hooks/useAxios";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "@firebase/auth";
 import { auth } from "@libs/firebase";
+import { useToast } from "@hooks/shadcn/useToast";
 
 function RootLayout(): JSX.Element {
   const user = useStore((state) => state.user);
@@ -14,71 +15,83 @@ function RootLayout(): JSX.Element {
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
+
   const createAxiosInstance = useAxios();
+  const { toast } = useToast();
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (user !== null) {
-        const idToken = await user.getIdToken();
-        const resp = await createAxiosInstance().post<{
-          phone_verified: boolean;
-        }>(
-          "/login",
-          { id_token: idToken },
-          {
-            headers: {
-              Authorization: `Bearer ${idToken}`,
-              "Content-Type": "application/json",
-            },
+        try {
+          const idToken = await user.getIdToken();
+          const resp = await createAxiosInstance().post<{
+            phone_verified: boolean;
+          }>(
+            "/login",
+            { id_token: idToken },
+            {
+              headers: {
+                Authorization: `Bearer ${idToken}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          const loggedUser: User = {
+            id: user.uid ?? "",
+            name: user.displayName ?? "",
+            email: user.email ?? "",
+            avatarURL: user.photoURL ?? "",
+            phoneVerified: false,
+            idToken,
+          };
+
+          if (resp.status === 201) {
+            setUser(loggedUser);
+          } else if (resp.status === 200) {
+            setUser({ ...loggedUser, phoneVerified: resp.data.phone_verified });
+          } else if (resp.status === 400) {
+            throw new Error("invalid json body");
+          } else if (resp.status === 404) {
+            throw new Error("invalid id token");
+          } else {
+            throw new Error(`unknown response status code ${resp.status}`);
           }
-        );
+        } catch (error) {
+          console.error(
+            new Error("failed to login with Google", { cause: error })
+          );
 
-        const loggedUser: User = {
-          id: user.uid ?? "",
-          name: user.displayName ?? "",
-          email: user.email ?? "",
-          avatarURL: user.photoURL ?? "",
-          phoneVerified: false,
-          idToken,
-        };
-
-        if (resp.status === 201) {
-          setUser(loggedUser);
-        } else if (resp.status === 200) {
-          setUser({ ...loggedUser, phoneVerified: resp.data.phone_verified });
-        } else {
-          setUser(undefined);
+          toast({
+            description: "Gagal login menggunakan akun Google",
+            variant: "destructive",
+          });
+          auth.signOut();
         }
       } else {
         setUser(undefined);
       }
       setIsLoading(false);
     });
-  }, [setUser, createAxiosInstance]);
+  }, [setUser, createAxiosInstance, toast]);
 
   useEffect(() => {
     if (isLoading) return;
 
     if (user === undefined && location.pathname !== "/") {
       navigate("/");
-    } else if (user !== undefined && location.pathname === "/") {
-      if (user.phoneVerified) {
-        navigate("/dashboard");
-      } else {
-        navigate("/phone-number");
-      }
     } else if (
       user !== undefined &&
       user.phoneVerified &&
-      location.pathname === "/phone-number"
+      (location.pathname === "/phone-verification" || location.pathname === "/")
     ) {
       navigate("/dashboard");
     } else if (
       user !== undefined &&
       user.phoneVerified === false &&
-      location.pathname !== "/phone-number"
+      location.pathname !== "/phone-verification"
     ) {
-      navigate("/phone-number");
+      navigate("/phone-verification");
     }
   }, [isLoading, user, location, navigate]);
 
