@@ -67,6 +67,18 @@ function RootLayout(): JSX.Element {
       } else {
         navigate("/phone-number");
       }
+    } else if (
+      user !== undefined &&
+      user.phoneVerified &&
+      location.pathname === "/phone-number"
+    ) {
+      navigate("/dashboard");
+    } else if (
+      user !== undefined &&
+      user.phoneVerified === false &&
+      location.pathname !== "/phone-number"
+    ) {
+      navigate("/phone-number");
     }
   }, [isLoading, user, location, navigate]);
 
