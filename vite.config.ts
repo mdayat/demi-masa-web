@@ -15,7 +15,6 @@ export default defineConfig({
     extensions: [".ts", ".tsx"],
     alias: {
       "@components": path.resolve(__dirname, "./src/components"),
-      "@contexts": path.resolve(__dirname, "./src/contexts"),
       "@hooks": path.resolve(__dirname, "./src/hooks"),
       "@libs": path.resolve(__dirname, "./src/libs"),
       "@utils": path.resolve(__dirname, "./src/utils"),
