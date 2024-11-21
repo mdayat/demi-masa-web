@@ -1,7 +1,6 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import { RootLayout } from "@components/RootLayout";
-import { UserProvider } from "@contexts/User";
 
 const Home = lazy(() => import("./pages/Home"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -16,11 +15,7 @@ const ErrorBoundary = lazy(() =>
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <UserProvider>
-        <RootLayout />
-      </UserProvider>
-    ),
+    element: <RootLayout />,
     errorElement: (
       <Suspense fallback={<></>}>
         <ErrorBoundary />
