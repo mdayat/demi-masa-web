@@ -14,12 +14,21 @@ interface States {
 }
 
 interface Actions {
-  setUser: (user: User | undefined) => void;
+  setUser: (
+    user: ((user: User | undefined) => User | undefined) | User | undefined
+  ) => void;
 }
 
 const useStore = create<States & Actions>((set) => ({
   user: undefined,
-  setUser: (user) => set(() => ({ user })),
+  setUser: (user) => {
+    set((state) => {
+      if (typeof user === "function") {
+        return { user: user(state.user) };
+      }
+      return { user };
+    });
+  },
 }));
 
 export { useStore };
