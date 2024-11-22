@@ -1,3 +1,4 @@
+import { PricingPlan } from "@components/Home/PricingPlan";
 import { VisiMisi } from "@components/Home/VisiMisi";
 import { Button } from "@components/shadcn/Button";
 import { GoogleAuthProvider, signInWithPopup } from "@firebase/auth";
@@ -37,6 +38,7 @@ export default function Home(): JSX.Element {
       </div>
 
       <VisiMisi />
+      <PricingPlan />
 
       <Button onClick={handleLogin} variant="outline">
         Login With Google
