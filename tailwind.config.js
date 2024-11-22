@@ -1,9 +1,15 @@
+import { fontFamily } from "tailwindcss/defaultTheme";
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", ...fontFamily.sans],
+        "nunito-sans": ["Nunito Sans", "sans-serif"],
+      },
       keyframes: {
         "caret-blink": {
           "0%,70%,100%": { opacity: "1" },
