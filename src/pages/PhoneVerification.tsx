@@ -188,7 +188,7 @@ function PhoneVerification() {
 
                 <FormDescription>
                   Masukkan nomor WhatsApp kamu agar kami dapat mengirim
-                  pengingat shalat
+                  pengingat salat
                 </FormDescription>
                 <FormMessage />
               </FormItem>
