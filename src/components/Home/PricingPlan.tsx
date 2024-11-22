@@ -1,6 +1,5 @@
 import { Button } from "@components/shadcn/Button";
 import { CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
-import { Link } from "react-router-dom";
 
 function PricingPlan() {
   return (
@@ -20,7 +19,7 @@ function PricingPlan() {
           variant="outline"
           className="text-center block w-32 mx-auto"
         >
-          <Link to="#login-section">Pilih Paket</Link>
+          <a href="#login-section">Pilih Paket</a>
         </Button>
 
         <hr className="border-[#C2C2C2] my-7" />
@@ -81,7 +80,7 @@ function PricingPlan() {
           type="button"
           className="bg-[#BF8E50] hover:bg-[#BF8E50]/90 text-center block w-32 mx-auto"
         >
-          <Link to="#login-section">Pilih Paket</Link>
+          <a href="#login-section">Pilih Paket</a>
         </Button>
 
         <hr className="border-[#C2C2C2] my-7" />
