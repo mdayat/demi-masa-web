@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 function PricingPlan() {
   return (
-    <div className="my-32 mx-8 flex flex-col gap-10">
+    <div className="my-32 mx-6 flex flex-col gap-10">
       <div className="border border-[#C2C2C2] rounded-2xl py-6">
         <h3 className="text-[#363636] font-bold text-center text-xl mb-2">
           Gratis

@@ -1,6 +1,6 @@
 function VisiMisi() {
   return (
-    <div className="my-32 mx-8">
+    <div className="my-32 mx-6">
       <article className="text-center">
         <h2 className="text-[#61412D] font-bold text-4xl mb-6">Visi</h2>
         <p className="text-[#363636]">
