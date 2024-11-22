@@ -1,3 +1,4 @@
+import { Article } from "@components/Home/Article";
 import { PricingPlan } from "@components/Home/PricingPlan";
 import { Surah } from "@components/Home/Surah";
 import { VisiMisi } from "@components/Home/VisiMisi";
@@ -41,6 +42,7 @@ export default function Home(): JSX.Element {
       <VisiMisi />
       <PricingPlan />
       <Surah />
+      <Article />
 
       <Button onClick={handleLogin} variant="outline">
         Login With Google
