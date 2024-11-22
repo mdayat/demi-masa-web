@@ -3,6 +3,7 @@ import { Footer } from "@components/Home/Footer";
 import { PricingPlan } from "@components/Home/PricingPlan";
 import { Surah } from "@components/Home/Surah";
 import { VisiMisi } from "@components/Home/VisiMisi";
+import { Google } from "@components/Icons/Google";
 import { Button } from "@components/shadcn/Button";
 import { GoogleAuthProvider, signInWithPopup } from "@firebase/auth";
 import { useToast } from "@hooks/shadcn/useToast";
@@ -45,9 +46,33 @@ export default function Home(): JSX.Element {
       <Surah />
       <Article />
 
-      <Button onClick={handleLogin} variant="outline">
-        Login With Google
-      </Button>
+      <div
+        id="login-section"
+        className="bg-[url('/sunset.jpg')] bg-cover bg-center mt-32 px-6 py-16"
+      >
+        <div className="bg-white/90 rounded-2xl overflow-hidden pb-6">
+          <div className="bg-black/75 grid place-items-center rounded-b-[40px] h-14 mb-6">
+            <h2 className="text-white font-bold text-lg">
+              Mulai Perjalanan Ibadah
+            </h2>
+          </div>
+
+          <p className="text-[#363636] text-center mx-4 mb-6">
+            Cukup dengan akun Google, tanpa perlu repot-repot membuat akun baru.
+          </p>
+
+          <Button
+            onClick={handleLogin}
+            variant="default"
+            className="bg-blue-600 hover:bg-blue-600/90 mx-auto flex items-center justify-between px-2.5 py-5 rounded-full"
+          >
+            <span className="rounded-full bg-white p-1">
+              <Google />
+            </span>
+            <span className="text-white font-bold">Login dengan Google</span>
+          </Button>
+        </div>
+      </div>
 
       <Footer />
     </>

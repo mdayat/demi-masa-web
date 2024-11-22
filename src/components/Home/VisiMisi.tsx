@@ -5,7 +5,7 @@ function VisiMisi() {
         <h2 className="text-[#61412D] font-bold text-4xl mb-6">Visi</h2>
         <p className="text-[#363636]">
           Menjadikan digitalisasi dalam kepekaan beribadah di setiap kesibukan
-          apapun
+          apapun.
         </p>
       </article>
 
