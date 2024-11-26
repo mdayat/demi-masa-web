@@ -13,10 +13,21 @@ import {
   Pencil1Icon,
   TrashIcon,
 } from "@radix-ui/react-icons";
+import { lazy, useState } from "react";
+
+const UpdateWhatsAppDialog = lazy(() =>
+  import("@components/Profile/UpdateWhatsAppDialog").then(
+    ({ UpdateWhatsAppDialog }) => ({
+      default: UpdateWhatsAppDialog,
+    })
+  )
+);
 
 export default function Profile() {
   const user = useStore((state) => state.user);
-  const isPremium = true;
+
+  const [updateWAOpened, setUpdateWAOpened] = useState(false);
+
   const transactionHistory = [];
 
   return (
@@ -42,6 +53,7 @@ export default function Profile() {
         </div>
 
         <Button
+          onClick={() => setUpdateWAOpened(true)}
           type="button"
           variant="default"
           className="bg-[#BF8E50] hover:bg-[#BF8E50]/90 flex justify-center items-center gap-2"
@@ -49,6 +61,15 @@ export default function Profile() {
           <Pencil1Icon className="text-white" />
           Edit
         </Button>
+
+        {updateWAOpened ? (
+          <UpdateWhatsAppDialog
+            open={updateWAOpened}
+            setOpen={setUpdateWAOpened}
+          />
+        ) : (
+          <></>
+        )}
       </div>
 
       <div className="flex items-center gap-3 border border-[#C2C2C2] rounded-2xl p-3.5 mb-3.5 mx-6">
@@ -68,7 +89,7 @@ export default function Profile() {
         <div>
           <h3 className="text-[#7B7B7B] font-medium text-xs">WhatsApp</h3>
           <p className="text-[#7B7B7B] font-bold text-sm">
-            {user?.phoneVerified}
+            {user?.phoneNumber}
           </p>
         </div>
       </div>
@@ -78,7 +99,7 @@ export default function Profile() {
         <h2 className="text-[#7B7B7B] font-medium">Paket Saya</h2>
       </div>
 
-      {isPremium ? (
+      {user?.accountType === "premium" ? (
         <div className="bg-[#BF8E50] rounded-2xl p-6 mx-6">
           <Badge
             variant="default"
