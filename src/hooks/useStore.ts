@@ -1,12 +1,16 @@
 import { create } from "zustand";
 
+type AccountType = "free" | "premium";
+
 interface User {
+  idToken: string;
   id: string;
   name: string;
   email: string;
-  avatarURL: string;
-  idToken: string;
+  phoneNumber: string;
   phoneVerified: boolean;
+  accountType: AccountType;
+  expiredAt: string;
 }
 
 interface States {
@@ -32,4 +36,4 @@ const useStore = create<States & Actions>((set) => ({
 }));
 
 export { useStore };
-export type { User };
+export type { User, AccountType };
