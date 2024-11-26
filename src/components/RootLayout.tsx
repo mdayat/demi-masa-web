@@ -1,7 +1,6 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Toaster } from "@components/shadcn/Toaster";
-import { useStore, type User } from "@hooks/useStore";
-import { Button } from "./shadcn/Button";
+import { useStore, type AccountType, type User } from "@hooks/useStore";
 import { useAxios } from "@hooks/useAxios";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "@firebase/auth";
@@ -25,7 +24,10 @@ function RootLayout(): JSX.Element {
         try {
           const idToken = await user.getIdToken();
           const resp = await createAxiosInstance().post<{
+            phone_number: string;
             phone_verified: boolean;
+            account_type: AccountType;
+            expired_at: string;
           }>(
             "/login",
             { id_token: idToken },
@@ -41,15 +43,23 @@ function RootLayout(): JSX.Element {
             id: user.uid ?? "",
             name: user.displayName ?? "",
             email: user.email ?? "",
-            avatarURL: user.photoURL ?? "",
+            phoneNumber: "",
             phoneVerified: false,
+            accountType: "free",
+            expiredAt: "",
             idToken,
           };
 
           if (resp.status === 201) {
             setUser(loggedUser);
           } else if (resp.status === 200) {
-            setUser({ ...loggedUser, phoneVerified: resp.data.phone_verified });
+            setUser({
+              ...loggedUser,
+              phoneNumber: resp.data.phone_number,
+              phoneVerified: resp.data.phone_verified,
+              accountType: resp.data.account_type,
+              expiredAt: resp.data.expired_at,
+            });
           } else if (resp.status === 400) {
             throw new Error("invalid json body");
           } else if (resp.status === 404) {
@@ -110,12 +120,6 @@ function RootLayout(): JSX.Element {
   return (
     <>
       <Toaster />
-
-      {user !== undefined && (
-        <Button variant="destructive" onClick={() => auth.signOut()}>
-          Logout
-        </Button>
-      )}
 
       <main>
         <Outlet />
