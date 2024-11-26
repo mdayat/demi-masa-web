@@ -5,6 +5,7 @@ import { RootLayout } from "@components/RootLayout";
 const Home = lazy(() => import("./pages/Home"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const PhoneVerification = lazy(() => import("./pages/PhoneVerification"));
+const Profile = lazy(() => import("./pages/Profile"));
 
 const ErrorBoundary = lazy(() =>
   import("@components/ErrorBoundary").then(({ ErrorBoundary }) => ({
@@ -45,6 +46,15 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<></>}>
             <PhoneVerification />
+          </Suspense>
+        ),
+      },
+
+      {
+        path: "profile",
+        element: (
+          <Suspense fallback={<></>}>
+            <Profile />
           </Suspense>
         ),
       },
