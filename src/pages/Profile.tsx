@@ -31,12 +31,20 @@ const DeleteAccountDialog = lazy(() =>
     })
   )
 );
+const PricingListDialog = lazy(() =>
+  import("@components/Profile/PricingListDialog").then(
+    ({ PricingListDialog }) => ({
+      default: PricingListDialog,
+    })
+  )
+);
 
 export default function Profile() {
   const user = useStore((state) => state.user);
 
   const [updateWAOpened, setUpdateWAOpened] = useState(false);
   const [deleteAccountOpened, setDeleteAccountOpened] = useState(false);
+  const [pricingListOpened, setPricingListOpened] = useState(false);
 
   return (
     <>
@@ -110,11 +118,19 @@ export default function Profile() {
         <div className="bg-[#BF8E50] rounded-2xl p-6 mx-6">
           <Badge className="bg-white hover:bg-white text-black">Premium</Badge>
 
-          <p className="text-white font-bold text-sm mt-3.5">
-            Berlaku sampai 2 bulan lagi
+          <p className="text-white text-sm mt-3.5">
+            Berlaku sampai:&nbsp;
+            <strong>
+              {new Date(user.expiredAt).toLocaleDateString("id-ID", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
+            </strong>
           </p>
 
           <Button
+            disabled
             type="button"
             className="bg-white hover:bg-white/90 text-[#363636] mt-3.5"
           >
@@ -133,6 +149,7 @@ export default function Profile() {
           </p>
 
           <Button
+            onClick={() => setPricingListOpened(true)}
             type="button"
             variant="outline"
             className="text-[#363636] border-[#2F3D4A] mt-3.5"
@@ -140,6 +157,15 @@ export default function Profile() {
             <Wallet className="fill-[#363636]" />
             Beli Paket
           </Button>
+
+          {pricingListOpened ? (
+            <PricingListDialog
+              open={pricingListOpened}
+              setOpen={setPricingListOpened}
+            />
+          ) : (
+            <></>
+          )}
         </div>
       )}
 
