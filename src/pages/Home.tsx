@@ -63,7 +63,6 @@ export default function Home(): JSX.Element {
 
           <Button
             onClick={handleLogin}
-            variant="default"
             className="bg-blue-600 hover:bg-blue-600/90 mx-auto flex items-center justify-between px-2.5 py-5 rounded-full"
           >
             <span className="rounded-full bg-white p-1">

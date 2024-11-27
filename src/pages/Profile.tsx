@@ -23,10 +23,19 @@ const UpdateWhatsAppDialog = lazy(() =>
   )
 );
 
+const DeleteAccountDialog = lazy(() =>
+  import("@components/Profile/DeleteAccountDialog").then(
+    ({ DeleteAccountDialog }) => ({
+      default: DeleteAccountDialog,
+    })
+  )
+);
+
 export default function Profile() {
   const user = useStore((state) => state.user);
 
   const [updateWAOpened, setUpdateWAOpened] = useState(false);
+  const [deleteAccountOpened, setDeleteAccountOpened] = useState(false);
 
   const transactionHistory = [];
 
@@ -55,7 +64,6 @@ export default function Profile() {
         <Button
           onClick={() => setUpdateWAOpened(true)}
           type="button"
-          variant="default"
           className="bg-[#BF8E50] hover:bg-[#BF8E50]/90 flex justify-center items-center gap-2"
         >
           <Pencil1Icon className="text-white" />
@@ -101,12 +109,7 @@ export default function Profile() {
 
       {user?.accountType === "premium" ? (
         <div className="bg-[#BF8E50] rounded-2xl p-6 mx-6">
-          <Badge
-            variant="default"
-            className="bg-white hover:bg-white text-black"
-          >
-            Premium
-          </Badge>
+          <Badge className="bg-white hover:bg-white text-black">Premium</Badge>
 
           <p className="text-white font-bold text-sm mt-3.5">
             Berlaku sampai 2 bulan lagi
@@ -114,7 +117,6 @@ export default function Profile() {
 
           <Button
             type="button"
-            variant="default"
             className="bg-white hover:bg-white/90 text-[#363636] mt-3.5"
           >
             <Wallet className="fill-[#363636]" />
@@ -150,10 +152,7 @@ export default function Profile() {
       {transactionHistory.length !== 0 ? (
         <div className="border border-[#C2C2C2] rounded-2xl p-6 mx-6">
           <div className="flex items-center gap-3">
-            <Badge
-              variant="default"
-              className="bg-[#BF8E50] hover:bg-[#BF8E50] text-white"
-            >
+            <Badge className="bg-[#BF8E50] hover:bg-[#BF8E50] text-white">
               Premium
             </Badge>
 
@@ -189,12 +188,21 @@ export default function Profile() {
         </p>
 
         <Button
+          onClick={() => setDeleteAccountOpened(true)}
           type="button"
-          variant="default"
           className="bg-white hover:bg-white/90 text-[#D9534F] w-full"
         >
           Hapus Akun
         </Button>
+
+        {deleteAccountOpened ? (
+          <DeleteAccountDialog
+            open={deleteAccountOpened}
+            setOpen={setDeleteAccountOpened}
+          />
+        ) : (
+          <></>
+        )}
       </div>
 
       <div className="flex items-center gap-3 mt-6 mb-3.5 mx-6">
