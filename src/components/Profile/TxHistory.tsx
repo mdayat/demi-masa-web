@@ -3,7 +3,6 @@ import { useToast } from "@hooks/shadcn/useToast";
 import { useAxios } from "@hooks/useAxios";
 import { useStore, type PaymentStatus } from "@hooks/useStore";
 import { useEffect, useState } from "react";
-import moment from "moment";
 
 interface Order {
   id: string;
@@ -14,19 +13,25 @@ interface Order {
 }
 
 function formatDate(paidAt: string, subscriptionDuration: number): string {
-  const startDate = moment(paidAt, "YYYY-MM-DD HH:mm:ss.SSSSSS Z", "en");
+  const startDate = new Date(paidAt);
+  const options: Intl.DateTimeFormatOptions = {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  };
+
   let formattedStartDate = "";
   let formattedEndDate = "";
   let invalidDateFormatMsg = "";
 
-  if (startDate.isValid()) {
-    const endDate = startDate.clone().add(subscriptionDuration, "seconds");
-    formattedStartDate = startDate.format("D MMMM YYYY");
-    formattedEndDate = endDate.format("D MMMM YYYY");
-  } else {
+  if (isNaN(startDate.getTime())) {
     const msg = "invalid date format";
     invalidDateFormatMsg = msg;
     console.error(new Error(msg));
+  } else {
+    const endDate = new Date(startDate.getTime() + subscriptionDuration * 1000);
+    formattedStartDate = startDate.toLocaleDateString("id-ID", options);
+    formattedEndDate = endDate.toLocaleDateString("id-ID", options);
   }
 
   return invalidDateFormatMsg === ""
