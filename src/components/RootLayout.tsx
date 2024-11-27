@@ -27,6 +27,7 @@ function RootLayout(): JSX.Element {
             phone_number: string;
             phone_verified: boolean;
             account_type: AccountType;
+            upgraded_at: string;
             expired_at: string;
           }>(
             "/login",
@@ -46,6 +47,7 @@ function RootLayout(): JSX.Element {
             phoneNumber: "",
             phoneVerified: false,
             accountType: "free",
+            upgradedAt: "",
             expiredAt: "",
             idToken,
           };
@@ -55,10 +57,11 @@ function RootLayout(): JSX.Element {
           } else if (resp.status === 200) {
             setUser({
               ...loggedUser,
-              phoneNumber: resp.data.phone_number,
+              phoneNumber: resp.data.phone_number ?? "",
               phoneVerified: resp.data.phone_verified,
               accountType: resp.data.account_type,
-              expiredAt: resp.data.expired_at,
+              upgradedAt: resp.data.upgraded_at ?? "",
+              expiredAt: resp.data.expired_at ?? "",
             });
           } else if (resp.status === 400) {
             throw new Error("invalid json body");

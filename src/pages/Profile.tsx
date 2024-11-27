@@ -4,6 +4,7 @@ import { PersonCircle } from "@components/Icons/PersonCircle";
 import { ShoppingBag } from "@components/Icons/ShoppingBag";
 import { Wallet } from "@components/Icons/Wallet";
 import { WhatsApp } from "@components/Icons/WhatsApp";
+import { TxHistory } from "@components/Profile/TxHistory";
 import { Badge } from "@components/shadcn/Badge";
 import { Button } from "@components/shadcn/Button";
 import { useStore } from "@hooks/useStore";
@@ -36,8 +37,6 @@ export default function Profile() {
 
   const [updateWAOpened, setUpdateWAOpened] = useState(false);
   const [deleteAccountOpened, setDeleteAccountOpened] = useState(false);
-
-  const transactionHistory = [];
 
   return (
     <>
@@ -149,32 +148,7 @@ export default function Profile() {
         <h2 className="text-[#7B7B7B] font-medium">Riwayat Transaksi</h2>
       </div>
 
-      {transactionHistory.length !== 0 ? (
-        <div className="border border-[#C2C2C2] rounded-2xl p-6 mx-6">
-          <div className="flex items-center gap-3">
-            <Badge className="bg-[#BF8E50] hover:bg-[#BF8E50] text-white">
-              Premium
-            </Badge>
-
-            <Badge
-              variant="outline"
-              className="border-[#67ACE8] text-[#67ACE8]"
-            >
-              Sukses
-            </Badge>
-          </div>
-
-          <p className="text-[#7B7B7B] font-medium my-3">
-            2 Januari 2024 - 2 Februari 2024
-          </p>
-
-          <p className="text-[#363636] font-bold">Rp250.000</p>
-        </div>
-      ) : (
-        <p className="text-[#7B7B7B] text-center font-medium border border-[#C2C2C2] rounded-2xl p-6 mx-6">
-          Belum ada transaksi
-        </p>
-      )}
+      <TxHistory />
 
       <div className="flex items-center gap-3 mt-6 mb-3.5 mx-6">
         <TrashIcon className="text-[#333333] w-5 h-5" />
