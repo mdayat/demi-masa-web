@@ -24,9 +24,19 @@ interface TxHistory {
   paidAt: string;
 }
 
+interface SubscriptionPlan {
+  id: string;
+  name: string;
+  price: number;
+  duration_in_months: number;
+}
+
+type SubscriptionPlanMap = Map<string, SubscriptionPlan[]>;
+
 interface States {
   user: User | undefined;
   txHistories: TxHistory[] | undefined;
+  subscriptionPlans: SubscriptionPlanMap | undefined;
 }
 
 interface Actions {
@@ -34,9 +44,17 @@ interface Actions {
     user: ((user: User | undefined) => User | undefined) | User | undefined
   ) => void;
   setTxHistories: (
-    txHistory:
+    txHistories:
       | ((txHistories: TxHistory[] | undefined) => TxHistory[] | undefined)
       | TxHistory[]
+      | undefined
+  ) => void;
+  setSubscriptionPlans: (
+    subscriptionPlans:
+      | ((
+          subscriptionPlans: SubscriptionPlanMap | undefined
+        ) => SubscriptionPlanMap | undefined)
+      | SubscriptionPlanMap
       | undefined
   ) => void;
 }
@@ -44,6 +62,7 @@ interface Actions {
 const useStore = create<States & Actions>((set) => ({
   user: undefined,
   txHistories: undefined,
+  subscriptionPlans: undefined,
   setUser: (user) => {
     set((state) => {
       if (typeof user === "function") {
@@ -60,7 +79,24 @@ const useStore = create<States & Actions>((set) => ({
       return { txHistories };
     });
   },
+  setSubscriptionPlans: (subscriptionPlans) => {
+    set((state) => {
+      if (typeof subscriptionPlans === "function") {
+        return {
+          subscriptionPlans: subscriptionPlans(state.subscriptionPlans),
+        };
+      }
+      return { subscriptionPlans };
+    });
+  },
 }));
 
 export { useStore };
-export type { User, AccountType, TxHistory, PaymentStatus };
+export type {
+  User,
+  AccountType,
+  TxHistory,
+  PaymentStatus,
+  SubscriptionPlan,
+  SubscriptionPlanMap,
+};

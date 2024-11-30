@@ -2,8 +2,15 @@ import { Button } from "@components/shadcn/Button";
 import { Input } from "@components/shadcn/Input";
 import { Label } from "@components/shadcn/Label";
 import { CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { Dialog, DialogContent } from "@components/shadcn/Dialog";
+import { useToast } from "@hooks/shadcn/useToast";
+import { useAxios } from "@hooks/useAxios";
+import { useStore, type SubscriptionPlan } from "@hooks/useStore";
+import {
+  SubscriptionPlans,
+  SubscriptionPlanSkeleton,
+} from "./SubscriptionPlan";
 
 interface PricingListDialogProps {
   open: boolean;
@@ -11,7 +18,72 @@ interface PricingListDialogProps {
 }
 
 function PricingListDialog({ open, setOpen }: PricingListDialogProps) {
+  const user = useStore((state) => state.user);
+  const subscriptionPlans = useStore((state) => state.subscriptionPlans);
+  const setSubscriptionPlans = useStore((state) => state.setSubscriptionPlans);
+
   const [couponCode, setCouponCode] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { toast } = useToast();
+  const createAxiosInstance = useAxios();
+
+  useEffect(() => {
+    if (subscriptionPlans !== undefined) return;
+    setIsLoading(true);
+
+    (async () => {
+      try {
+        const resp = await createAxiosInstance().get<{
+          subscription_plans: SubscriptionPlan[];
+        }>("/subscription-plans", {
+          headers: { Authorization: `Bearer ${user!.idToken}` },
+        });
+
+        if (resp.status === 200) {
+          const subsPlan = new Map<string, SubscriptionPlan[]>();
+
+          for (let i = 0; i < resp.data.subscription_plans.length; i++) {
+            const subsPlanName = resp.data.subscription_plans[i].name;
+            const result = subsPlan.get(subsPlanName);
+
+            if (result === undefined) {
+              subsPlan.set(
+                subsPlanName,
+                new Array<SubscriptionPlan>(resp.data.subscription_plans[i])
+              );
+            } else {
+              subsPlan.set(subsPlanName, [
+                ...result,
+                resp.data.subscription_plans[i],
+              ]);
+            }
+          }
+
+          setSubscriptionPlans(subsPlan);
+        } else {
+          throw new Error(`unknown response status code ${resp.status}`);
+        }
+      } catch (error) {
+        console.error(
+          new Error("failed to get subscription plans", { cause: error })
+        );
+
+        toast({
+          description: "Gagal menampilkan subscription plans",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, [
+    toast,
+    createAxiosInstance,
+    user,
+    setSubscriptionPlans,
+    subscriptionPlans,
+  ]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -27,7 +99,7 @@ function PricingListDialog({ open, setOpen }: PricingListDialogProps) {
             </button>
           </div>
 
-          <div className="border border-[#C2C2C2] rounded-2xl px-5 py-3 mb-6">
+          <div className="border border-[#C2C2C2] rounded-2xl px-5 py-3">
             <Label
               htmlFor="coupon_code"
               className="text-black font-bold text-base mb-2 block"
@@ -54,62 +126,11 @@ function PricingListDialog({ open, setOpen }: PricingListDialogProps) {
             </Button>
           </div>
 
-          <div className="border border-[#BF8E50] rounded-2xl overflow-hidden pb-6">
-            <h3 className="bg-[#BF8E50] text-white font-bold text-center text-xl py-3 mb-6">
-              Premium
-            </h3>
-
-            <div className="flex flex-col gap-4 mb-4 mx-6">
-              <button type="button" className="bg-[#BF8E50] rounded-lg py-2">
-                <span className="text-[#363636] block font-bold text-center">
-                  Pilih Paket
-                </span>
-
-                <span className="text-white flex justify-center items-center gap-0.5">
-                  <span className="font-medium text-xs">Rp</span>
-                  <span className="font-bold text-[26px]">35.000,-</span>
-                  <span className="font-medium text-xs">/Bln</span>
-                </span>
-              </button>
-
-              <button type="button" className="bg-[#BF8E50] rounded-lg py-2">
-                <span className="text-[#363636] block font-bold text-center">
-                  Pilih Paket
-                </span>
-
-                <span className="text-white flex justify-center items-center gap-0.5">
-                  <span className="font-medium text-xs">Rp</span>
-                  <span className="font-bold text-[26px]">105.000,-</span>
-                  <span className="font-medium text-xs">/3 Bln</span>
-                </span>
-              </button>
-            </div>
-
-            <hr className="border-[#C2C2C2] my-7" />
-
-            <ul className="flex flex-col gap-4 mx-6">
-              <li className="text-[#363636] text-sm flex items-center gap-3">
-                <CheckIcon className="text-[#F0AD4E] shrink-0 w-6 h-6" />{" "}
-                Pengingat salat 5 waktu melalui WhatsApp
-              </li>
-              <li className="text-[#363636] text-sm flex items-center gap-3">
-                <CheckIcon className="text-[#F0AD4E] shrink-0 w-6 h-6" />{" "}
-                Notifikasi saat masuk waktu salat
-              </li>
-              <li className="text-[#363636] text-sm flex items-center gap-3">
-                <CheckIcon className="text-[#F0AD4E] shrink-0 w-6 h-6" />
-                Notifikasi saat waktu salat tersisa 25%
-              </li>
-              <li className="text-[#363636] text-sm flex items-center gap-3">
-                <CheckIcon className="text-[#F0AD4E] shrink-0 w-6 h-6" />
-                Manajemen ibadah melalui to-do list
-              </li>
-              <li className="text-[#363636] text-sm flex items-center gap-3">
-                <CheckIcon className="text-[#F0AD4E] shrink-0 w-6 h-6" />{" "}
-                Laporan kemajuan ibadah tak terbatas
-              </li>
-            </ul>
-          </div>
+          {isLoading ? (
+            <SubscriptionPlanSkeleton />
+          ) : (
+            <SubscriptionPlans subscriptionPlans={subscriptionPlans} />
+          )}
 
           <div className="border border-[#C2C2C2] rounded-2xl py-6 mt-6">
             <h3 className="text-[#363636] font-bold text-center text-xl mb-2">
