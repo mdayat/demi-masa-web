@@ -73,10 +73,12 @@ function DeleteAccountDialog({ open, setOpen }: DeleteAccountDialogProps) {
 
         <DialogFooter className="gap-6">
           <Button
+            disabled={isLoading}
+            onClick={() => setOpen(false)}
             type="button"
             className="bg-[#363636] hover:bg-[#363636] w-full"
           >
-            Batalkan
+            {isLoading ? "Loading..." : "Batalkan"}
           </Button>
 
           <Button
