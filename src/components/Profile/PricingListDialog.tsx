@@ -34,35 +34,33 @@ function PricingListDialog({ open, setOpen }: PricingListDialogProps) {
 
     (async () => {
       try {
-        const resp = await createAxiosInstance().get<{
-          subscription_plans: SubscriptionPlan[];
-        }>("/subscription-plans", {
-          headers: { Authorization: `Bearer ${user!.idToken}` },
-        });
+        const resp = await createAxiosInstance().get<SubscriptionPlan[]>(
+          "/subscription-plans",
+          { headers: { Authorization: `Bearer ${user!.idToken}` } }
+        );
 
-        if (resp.status === 200) {
+        if (resp.status !== 200) {
+          throw new Error(`unknown response status code ${resp.status}`);
+        }
+
+        if (resp.data.length !== 0) {
           const subsPlan = new Map<string, SubscriptionPlan[]>();
 
-          for (let i = 0; i < resp.data.subscription_plans.length; i++) {
-            const subsPlanName = resp.data.subscription_plans[i].name;
+          for (let i = 0; i < resp.data.length; i++) {
+            const subsPlanName = resp.data[i].name;
             const result = subsPlan.get(subsPlanName);
 
             if (result === undefined) {
               subsPlan.set(
                 subsPlanName,
-                new Array<SubscriptionPlan>(resp.data.subscription_plans[i])
+                new Array<SubscriptionPlan>(resp.data[i])
               );
             } else {
-              subsPlan.set(subsPlanName, [
-                ...result,
-                resp.data.subscription_plans[i],
-              ]);
+              subsPlan.set(subsPlanName, [...result, resp.data[i]]);
             }
           }
 
           setSubscriptionPlans(subsPlan);
-        } else {
-          throw new Error(`unknown response status code ${resp.status}`);
         }
       } catch (error) {
         console.error(
@@ -115,21 +113,16 @@ function PricingListDialog({ open, setOpen }: PricingListDialogProps) {
               autoComplete="off"
               className="mb-4"
             />
-
-            <Button
-              disabled={couponCode === ""}
-              type="button"
-              variant="outline"
-              className="w-fit"
-            >
-              Masukkan
-            </Button>
           </div>
 
           {isLoading ? (
             <SubscriptionPlanSkeleton />
           ) : (
-            <SubscriptionPlans subscriptionPlans={subscriptionPlans} />
+            <SubscriptionPlans
+              subscriptionPlans={subscriptionPlans}
+              couponCode={couponCode}
+              setOpen={setOpen}
+            />
           )}
 
           <div className="border border-[#C2C2C2] rounded-2xl py-6 mt-6">

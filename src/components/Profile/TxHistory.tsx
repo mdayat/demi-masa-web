@@ -34,18 +34,17 @@ function TxHistory() {
 
     (async () => {
       try {
-        const resp = await createAxiosInstance().get<{
-          transactions: Transaction[] | null;
-        }>("/transactions", {
-          headers: { Authorization: `Bearer ${user!.idToken}` },
-        });
+        const resp = await createAxiosInstance().get<Transaction[]>(
+          "/transactions",
+          { headers: { Authorization: `Bearer ${user!.idToken}` } }
+        );
 
         if (resp.status !== 200) {
           throw new Error(`unknown response status code ${resp.status}`);
         }
 
-        if (resp.data.transactions !== null) {
-          setTransactions(resp.data.transactions);
+        if (resp.data.length !== 0) {
+          setTransactions(resp.data);
         }
       } catch (error) {
         console.error(
