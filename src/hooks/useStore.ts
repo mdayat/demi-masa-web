@@ -10,8 +10,6 @@ interface User {
   phoneNumber: string;
   phoneVerified: boolean;
   accountType: AccountType;
-  upgradedAt: string;
-  expiredAt: string;
 }
 
 type TransactionStatus = "UNPAID" | "PAID" | "FAILED" | "EXPIRED" | "REFUND";

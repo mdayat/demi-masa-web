@@ -118,17 +118,6 @@ export default function Profile() {
         <div className="bg-[#BF8E50] rounded-2xl p-6 mx-6">
           <Badge className="bg-white hover:bg-white text-black">Premium</Badge>
 
-          <p className="text-white text-sm mt-3.5">
-            Berlaku sampai:&nbsp;
-            <strong>
-              {new Date(user.expiredAt).toLocaleDateString("id-ID", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </strong>
-          </p>
-
           <Button
             disabled
             type="button"

@@ -46,9 +46,7 @@ function RootLayout(): JSX.Element {
             email: user.email ?? "",
             phoneNumber: "",
             phoneVerified: false,
-            accountType: "free",
-            upgradedAt: "",
-            expiredAt: "",
+            accountType: "FREE",
             idToken,
           };
 
@@ -60,8 +58,6 @@ function RootLayout(): JSX.Element {
               phoneNumber: resp.data.phone_number ?? "",
               phoneVerified: resp.data.phone_verified,
               accountType: resp.data.account_type,
-              upgradedAt: resp.data.upgraded_at ?? "",
-              expiredAt: resp.data.expired_at ?? "",
             });
           } else if (resp.status === 400) {
             throw new Error("invalid json body");
