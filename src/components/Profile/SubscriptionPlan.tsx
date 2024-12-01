@@ -1,4 +1,4 @@
-import { Skeleton } from "@components/shadcn/skeleton";
+import { Skeleton } from "@components/shadcn/Skeleton";
 import type { SubscriptionPlanMap } from "@hooks/useStore";
 import { CheckIcon } from "@radix-ui/react-icons";
 
