@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type AccountType = "free" | "premium";
+type AccountType = "FREE" | "PREMIUM";
 
 interface User {
   idToken: string;
@@ -14,14 +14,16 @@ interface User {
   expiredAt: string;
 }
 
-type PaymentStatus = "paid" | "unpaid";
+type TransactionStatus = "UNPAID" | "PAID" | "FAILED" | "EXPIRED" | "REFUND";
 
-interface TxHistory {
-  orderID: string;
-  status: PaymentStatus;
-  amount: number;
-  subscriptionDuration: number;
-  paidAt: string;
+interface Transaction {
+  id: string;
+  status: TransactionStatus;
+  qr_url: string;
+  paid_at: string;
+  expired_at: string;
+  price: number;
+  duration_in_months: number;
 }
 
 interface SubscriptionPlan {
@@ -35,7 +37,7 @@ type SubscriptionPlanMap = Map<string, SubscriptionPlan[]>;
 
 interface States {
   user: User | undefined;
-  txHistories: TxHistory[] | undefined;
+  transactions: Transaction[] | undefined;
   subscriptionPlans: SubscriptionPlanMap | undefined;
 }
 
@@ -43,10 +45,10 @@ interface Actions {
   setUser: (
     user: ((user: User | undefined) => User | undefined) | User | undefined
   ) => void;
-  setTxHistories: (
-    txHistories:
-      | ((txHistories: TxHistory[] | undefined) => TxHistory[] | undefined)
-      | TxHistory[]
+  setTransactions: (
+    transactions:
+      | ((transactions: Transaction[] | undefined) => Transaction[] | undefined)
+      | Transaction[]
       | undefined
   ) => void;
   setSubscriptionPlans: (
@@ -61,7 +63,7 @@ interface Actions {
 
 const useStore = create<States & Actions>((set) => ({
   user: undefined,
-  txHistories: undefined,
+  transactions: undefined,
   subscriptionPlans: undefined,
   setUser: (user) => {
     set((state) => {
@@ -71,12 +73,12 @@ const useStore = create<States & Actions>((set) => ({
       return { user };
     });
   },
-  setTxHistories: (txHistories) => {
+  setTransactions: (transactions) => {
     set((state) => {
-      if (typeof txHistories === "function") {
-        return { txHistories: txHistories(state.txHistories) };
+      if (typeof transactions === "function") {
+        return { transactions: transactions(state.transactions) };
       }
-      return { txHistories };
+      return { transactions };
     });
   },
   setSubscriptionPlans: (subscriptionPlans) => {
@@ -95,8 +97,8 @@ export { useStore };
 export type {
   User,
   AccountType,
-  TxHistory,
-  PaymentStatus,
+  Transaction,
+  TransactionStatus,
   SubscriptionPlan,
   SubscriptionPlanMap,
 };

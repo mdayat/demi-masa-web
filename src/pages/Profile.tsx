@@ -114,7 +114,7 @@ export default function Profile() {
         <h2 className="text-[#7B7B7B] font-medium">Paket Saya</h2>
       </div>
 
-      {user?.accountType === "premium" ? (
+      {user?.accountType === "PREMIUM" ? (
         <div className="bg-[#BF8E50] rounded-2xl p-6 mx-6">
           <Badge className="bg-white hover:bg-white text-black">Premium</Badge>
 
