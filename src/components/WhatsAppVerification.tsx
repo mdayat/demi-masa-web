@@ -266,9 +266,9 @@ function WhatsAppVerification({ setOpen }: WhatsAppVerificationProps) {
       <div>
         <p className="font-bold mb-2 mt-6">Catatan:</p>
         <ul className="list-disc text-sm flex flex-col gap-2 ml-6">
-          <li>Kamu hanya dapat membuat kode OTP 3 kali per hari.</li>
+          <li>Kamu bisa membuat kode OTP maksimal 3 kali per hari.</li>
           <li>Kode OTP berlaku selama 2 menit.</li>
-          <li>Kamu memiliki 3 kesempatan untuk verifikasi kode OTP.</li>
+          <li>Kamu punya 3 kesempatan untuk verifikasi kode OTP.</li>
         </ul>
       </div>
     </>
