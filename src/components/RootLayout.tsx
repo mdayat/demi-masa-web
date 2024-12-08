@@ -1,6 +1,11 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Toaster } from "@components/shadcn/Toaster";
-import { useStore, type AccountType, type User } from "@hooks/useStore";
+import {
+  useStore,
+  type AccountType,
+  type IndonesiaTimeZone,
+  type User,
+} from "@hooks/useStore";
 import { useAxios } from "@hooks/useAxios";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "@firebase/auth";
@@ -29,6 +34,7 @@ function RootLayout(): JSX.Element {
             account_type: AccountType;
             upgraded_at: string;
             expired_at: string;
+            time_zone: IndonesiaTimeZone;
           }>(
             "/login",
             { id_token: idToken },
@@ -47,6 +53,7 @@ function RootLayout(): JSX.Element {
             phoneNumber: "",
             phoneVerified: false,
             accountType: "FREE",
+            timeZone: undefined,
             idToken,
           };
 
@@ -58,6 +65,7 @@ function RootLayout(): JSX.Element {
               phoneNumber: resp.data.phone_number ?? "",
               phoneVerified: resp.data.phone_verified,
               accountType: resp.data.account_type,
+              timeZone: resp.data.time_zone,
             });
           } else if (resp.status === 400) {
             throw new Error("invalid json body");
@@ -89,18 +97,26 @@ function RootLayout(): JSX.Element {
 
     if (user === undefined && location.pathname !== "/") {
       navigate("/");
-    } else if (
-      user !== undefined &&
-      user.phoneVerified &&
-      (location.pathname === "/phone-verification" || location.pathname === "/")
-    ) {
-      navigate("/dashboard");
-    } else if (
-      user !== undefined &&
-      user.phoneVerified === false &&
-      location.pathname !== "/phone-verification"
-    ) {
-      navigate("/phone-verification");
+      return;
+    }
+
+    if (user !== undefined) {
+      if (
+        (user.phoneVerified === false || user.timeZone === undefined) &&
+        location.pathname !== "/profile-completion"
+      ) {
+        navigate("/profile-completion");
+        return;
+      }
+
+      if (
+        user.phoneVerified &&
+        user.timeZone !== undefined &&
+        (location.pathname === "/profile-completion" ||
+          location.pathname === "/")
+      ) {
+        navigate("/dashboard");
+      }
     }
   }, [isLoading, user, location, navigate]);
 
