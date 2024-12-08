@@ -39,12 +39,10 @@ function TxHistory() {
           { headers: { Authorization: `Bearer ${user!.idToken}` } }
         );
 
-        if (resp.status !== 200) {
-          throw new Error(`unknown response status code ${resp.status}`);
-        }
-
-        if (resp.data.length !== 0) {
+        if (resp.status === 200) {
           setTransactions(resp.data);
+        } else {
+          throw new Error(`unknown response status code ${resp.status}`);
         }
       } catch (error) {
         console.error(
@@ -69,7 +67,7 @@ function TxHistory() {
     );
   }
 
-  if (transactions === undefined) {
+  if (transactions === undefined || transactions.length === 0) {
     return (
       <p className="text-[#7B7B7B] text-center font-medium border border-[#C2C2C2] rounded-2xl p-6 mx-6">
         Belum ada transaksi

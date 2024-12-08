@@ -10,16 +10,17 @@ import { Button } from "@components/shadcn/Button";
 import { useStore } from "@hooks/useStore";
 import { auth } from "@libs/firebase";
 import {
+  ClockIcon,
   ExclamationTriangleIcon,
   Pencil1Icon,
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { lazy, useState } from "react";
 
-const UpdateWhatsAppDialog = lazy(() =>
-  import("@components/Profile/UpdateWhatsAppDialog").then(
-    ({ UpdateWhatsAppDialog }) => ({
-      default: UpdateWhatsAppDialog,
+const UpdateProfileDialog = lazy(() =>
+  import("@components/Profile/UpdateProfileDialog").then(
+    ({ UpdateProfileDialog }) => ({
+      default: UpdateProfileDialog,
     })
   )
 );
@@ -41,6 +42,14 @@ const PricingListDialog = lazy(() =>
 
 export default function Profile() {
   const user = useStore((state) => state.user);
+  let timeZone = "";
+  if (user?.timeZone === "Asia/Jakarta") {
+    timeZone = "WIB";
+  } else if (user?.timeZone === "Asia/Makassar") {
+    timeZone = "WITA";
+  } else {
+    timeZone = "WIT";
+  }
 
   const [updateWAOpened, setUpdateWAOpened] = useState(false);
   const [deleteAccountOpened, setDeleteAccountOpened] = useState(false);
@@ -78,7 +87,7 @@ export default function Profile() {
         </Button>
 
         {updateWAOpened ? (
-          <UpdateWhatsAppDialog
+          <UpdateProfileDialog
             open={updateWAOpened}
             setOpen={setUpdateWAOpened}
           />
@@ -87,7 +96,7 @@ export default function Profile() {
         )}
       </div>
 
-      <div className="flex items-center gap-3 border border-[#C2C2C2] rounded-2xl p-3.5 mb-3.5 mx-6">
+      <div className="flex items-center gap-3 border border-[#C2C2C2] rounded-2xl p-3.5 mx-6">
         <PersonCircle className="text-[#333333] w-8 h-8" />
 
         <div>
@@ -98,7 +107,7 @@ export default function Profile() {
         </div>
       </div>
 
-      <div className="flex items-center gap-3 border border-[#C2C2C2] rounded-2xl p-3.5 mx-6">
+      <div className="flex items-center gap-3 border border-[#C2C2C2] rounded-2xl p-3.5 mx-6 my-3.5">
         <WhatsApp className="fill-[#333333] w-8 h-8" />
 
         <div>
@@ -106,6 +115,15 @@ export default function Profile() {
           <p className="text-[#7B7B7B] font-bold text-sm">
             {user?.phoneNumber}
           </p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 border border-[#C2C2C2] rounded-2xl p-3.5 mx-6">
+        <ClockIcon className="text-[#333333] w-8 h-8" />
+
+        <div>
+          <h3 className="text-[#7B7B7B] font-medium text-xs">Zona Waktu</h3>
+          <p className="text-[#7B7B7B] font-bold text-sm">{timeZone}</p>
         </div>
       </div>
 
