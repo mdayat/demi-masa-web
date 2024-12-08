@@ -209,6 +209,15 @@ function WhatsAppVerification({ setOpen }: WhatsAppVerificationProps) {
             )}
           />
 
+          <Button
+            onClick={handleCreateOTP}
+            disabled={isLoading || otpDuration !== 0}
+            type="button"
+            className="w-full"
+          >
+            {isLoading ? "Loading..." : "Buat OTP"}
+          </Button>
+
           <FormField
             control={form.control}
             name="pin"
@@ -244,24 +253,13 @@ function WhatsAppVerification({ setOpen }: WhatsAppVerificationProps) {
             </p>
           )}
 
-          <div className="flex items-center gap-6">
-            <Button
-              onClick={handleCreateOTP}
-              disabled={isLoading || otpDuration !== 0}
-              type="button"
-              className="w-full"
-            >
-              {isLoading ? "Loading..." : "Buat OTP"}
-            </Button>
-
-            <Button
-              disabled={isLoading}
-              type="submit"
-              className="bg-[#BF8E50] hover:bg-[#BF8E50]/90 w-full"
-            >
-              {isLoading ? "Loading..." : "Verifikasi OTP"}
-            </Button>
-          </div>
+          <Button
+            disabled={isLoading}
+            type="submit"
+            className="bg-[#BF8E50] hover:bg-[#BF8E50]/90 w-full"
+          >
+            {isLoading ? "Loading..." : "Verifikasi OTP"}
+          </Button>
         </form>
       </Form>
 
