@@ -1,5 +1,10 @@
 import { create } from "zustand";
 
+type IndonesiaTimeZone = "Asia/Jakarta" | "Asia/Makassar" | "Asia/Jayapura";
+const WIBTimeZone: IndonesiaTimeZone = "Asia/Jakarta";
+const WITATimeZone: IndonesiaTimeZone = "Asia/Makassar";
+const WITTimeZone: IndonesiaTimeZone = "Asia/Jayapura";
+
 type AccountType = "FREE" | "PREMIUM";
 
 interface User {
@@ -10,6 +15,7 @@ interface User {
   phoneNumber: string;
   phoneVerified: boolean;
   accountType: AccountType;
+  timeZone: IndonesiaTimeZone | undefined;
 }
 
 type TransactionStatus = "UNPAID" | "PAID" | "FAILED" | "EXPIRED" | "REFUND";
@@ -91,7 +97,7 @@ const useStore = create<States & Actions>((set) => ({
   },
 }));
 
-export { useStore };
+export { useStore, WIBTimeZone, WITATimeZone, WITTimeZone };
 export type {
   User,
   AccountType,
@@ -99,4 +105,5 @@ export type {
   TransactionStatus,
   SubscriptionPlan,
   SubscriptionPlanMap,
+  IndonesiaTimeZone,
 };
