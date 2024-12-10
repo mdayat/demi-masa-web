@@ -39,10 +39,18 @@ interface SubscriptionPlan {
 
 type SubscriptionPlanMap = Map<string, SubscriptionPlan[]>;
 
+interface ToDoList {
+  id: string;
+  name: string;
+  description: string;
+  checked: boolean;
+}
+
 interface States {
   user: User | undefined;
   transactions: Transaction[] | undefined;
   subscriptionPlans: SubscriptionPlanMap | undefined;
+  toDoLists: ToDoList[] | undefined;
 }
 
 interface Actions {
@@ -63,12 +71,19 @@ interface Actions {
       | SubscriptionPlanMap
       | undefined
   ) => void;
+  setToDoLists: (
+    ToDoLists:
+      | ((ToDoLists: ToDoList[] | undefined) => ToDoList[] | undefined)
+      | ToDoList[]
+      | undefined
+  ) => void;
 }
 
 const useStore = create<States & Actions>((set) => ({
   user: undefined,
   transactions: undefined,
   subscriptionPlans: undefined,
+  toDoLists: undefined,
   setUser: (user) => {
     set((state) => {
       if (typeof user === "function") {
@@ -95,6 +110,16 @@ const useStore = create<States & Actions>((set) => ({
       return { subscriptionPlans };
     });
   },
+  setToDoLists: (toDoLists) => {
+    set((state) => {
+      if (typeof toDoLists === "function") {
+        return {
+          toDoLists: toDoLists(state.toDoLists),
+        };
+      }
+      return { toDoLists };
+    });
+  },
 }));
 
 export { useStore, WIBTimeZone, WITATimeZone, WITTimeZone };
@@ -106,4 +131,5 @@ export type {
   SubscriptionPlan,
   SubscriptionPlanMap,
   IndonesiaTimeZone,
+  ToDoList,
 };
