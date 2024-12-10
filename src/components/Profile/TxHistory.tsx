@@ -4,7 +4,7 @@ import { useToast } from "@hooks/shadcn/useToast";
 import { useAxios } from "@hooks/useAxios";
 import { useStore, type Transaction } from "@hooks/useStore";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 function formatDate(isoString: string) {
   const date = new Date(isoString);

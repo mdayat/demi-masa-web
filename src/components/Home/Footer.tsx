@@ -1,7 +1,7 @@
 import { Mail } from "@components/Icons/Mail";
 import { WhatsApp } from "@components/Icons/WhatsApp";
 import { InstagramLogoIcon } from "@radix-ui/react-icons";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 function Footer() {
   return (
