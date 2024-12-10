@@ -1,5 +1,5 @@
 import { useStore } from "@hooks/useStore";
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 import { Chart } from "./Icons/Chart";
 import { CheckList } from "./Icons/CheckList";
 import { PersonCircle } from "./Icons/PersonCircle";
