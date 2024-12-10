@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "@firebase/auth";
 import { auth } from "@libs/firebase";
 import { useToast } from "@hooks/shadcn/useToast";
+import { NavigationBar } from "./NavigationBar";
 
 function RootLayout(): JSX.Element {
   const user = useStore((state) => state.user);
@@ -136,8 +137,9 @@ function RootLayout(): JSX.Element {
     <>
       <Toaster />
 
-      <main>
+      <main className="h-screen overflow-scroll">
         <Outlet />
+        <NavigationBar />
       </main>
     </>
   );
