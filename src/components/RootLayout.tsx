@@ -151,7 +151,7 @@ function RootLayout(): JSX.Element {
         </div>
 
         <Outlet />
-        <NavigationBar />
+        {user !== undefined ? <NavigationBar /> : <></>}
       </main>
     </>
   );
