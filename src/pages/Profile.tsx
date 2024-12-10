@@ -57,18 +57,6 @@ export default function Profile() {
 
   return (
     <>
-      <div className="border border-[#E1E1E1] rounded-b-[40px] py-2.5">
-        <div className="flex justify-center items-center gap-2">
-          <img
-            src="demi-masa-logo.png"
-            alt="Logo Aplikasi Demi Masa"
-            className="w-9"
-          />
-
-          <h2 className="text-black font-bold text-xl">Demi Masa</h2>
-        </div>
-      </div>
-
       <h1 className="text-[#2F3D4A] text-xl font-bold m-6">Profil Pengguna</h1>
 
       <div className="flex justify-between items-center mb-3 mx-6">

@@ -138,6 +138,18 @@ function RootLayout(): JSX.Element {
       <Toaster />
 
       <main className="h-screen overflow-scroll">
+        <div className="border border-[#E1E1E1] rounded-b-[40px] py-2.5">
+          <div className="flex justify-center items-center gap-2">
+            <img
+              src="demi-masa-logo.png"
+              alt="Logo Aplikasi Demi Masa"
+              className="w-9"
+            />
+
+            <h2 className="text-black font-bold text-xl">Demi Masa</h2>
+          </div>
+        </div>
+
         <Outlet />
         <NavigationBar />
       </main>
