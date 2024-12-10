@@ -6,6 +6,7 @@ const Home = lazy(() => import("./pages/Home"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const ProfileCompletion = lazy(() => import("./pages/ProfileCompletion"));
 const Profile = lazy(() => import("./pages/Profile"));
+const ToDoList = lazy(() => import("./pages/ToDoList"));
 
 const ErrorBoundary = lazy(() =>
   import("@components/ErrorBoundary").then(({ ErrorBoundary }) => ({
@@ -55,6 +56,15 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<></>}>
             <Profile />
+          </Suspense>
+        ),
+      },
+
+      {
+        path: "to-do-list",
+        element: (
+          <Suspense fallback={<></>}>
+            <ToDoList />
           </Suspense>
         ),
       },
