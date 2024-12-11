@@ -1,12 +1,13 @@
-import { Button } from "@components/shadcn/Button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@components/shadcn/Dialog";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@components/shadcn/AlertDialog";
 import { Skeleton } from "@components/shadcn/Skeleton";
 import { useToast } from "@hooks/shadcn/useToast";
 import { useAxios } from "@hooks/useAxios";
@@ -131,16 +132,16 @@ function SubscriptionPlanButton({
         </span>
       </button>
 
-      <Dialog open={dialogOpened} onOpenChange={setDialogOpened}>
-        <DialogContent className="max-w-sm mx-auto">
-          <DialogHeader>
-            <DialogTitle>
+      <AlertDialog open={dialogOpened} onOpenChange={setDialogOpened}>
+        <AlertDialogContent className="max-w-sm mx-auto">
+          <AlertDialogHeader>
+            <AlertDialogTitle>
               Apakah kamu yakin ingin berlangganan {durationInMonths} bulan?
-            </DialogTitle>
+            </AlertDialogTitle>
 
-            <DialogDescription>
+            <AlertDialogDescription asChild>
               <div>
-                <p className="font-bold mb-2 mt-6">Catatan:</p>
+                <p className="font-bold mb-2">Catatan:</p>
                 <ul className="list-disc text-sm flex flex-col gap-2 ml-6">
                   <li>Pembayaran hanya melalui QRIS.</li>
 
@@ -160,20 +161,29 @@ function SubscriptionPlanButton({
                   </li>
                 </ul>
               </div>
-            </DialogDescription>
-          </DialogHeader>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
 
-          <DialogFooter>
-            <Button
+          <AlertDialogFooter className="gap-4">
+            <AlertDialogCancel
+              disabled={isLoading}
+              type="button"
+              className="w-full"
+            >
+              Batal
+            </AlertDialogCancel>
+
+            <AlertDialogAction
               disabled={isLoading}
               onClick={handleCreateTx}
+              type="button"
               className="bg-[#BF8E50] hover:bg-[#BF8E50]/90 text-white hover:text-white w-full"
             >
               {isLoading ? "Loading..." : "Proses Transaksi"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

@@ -137,7 +137,7 @@ function RootLayout(): JSX.Element {
     <>
       <Toaster />
 
-      <main className="h-screen overflow-scroll">
+      <main className="h-screen overflow-scroll pb-28">
         <div className="border border-[#E1E1E1] rounded-b-[40px] py-2.5">
           <div className="flex justify-center items-center gap-2">
             <img
