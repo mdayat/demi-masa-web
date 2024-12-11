@@ -1,13 +1,12 @@
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@components/shadcn/AlertDialog";
+import { Button } from "@components/shadcn/Button";
 import { useToast } from "@hooks/shadcn/useToast";
 import { useAxios } from "@hooks/useAxios";
 import { useStore } from "@hooks/useStore";
@@ -75,23 +74,29 @@ function DeleteToDoListDialog({
           </AlertDialogTitle>
 
           <AlertDialogDescription>
-            Ibadah <strong>{name}</strong> akan dihapus secara permanen dari
-            database.
+            Ibadah <strong>{name}</strong> akan dihapus secara permanen.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading} type="button">
+          <Button
+            disabled={isLoading}
+            onClick={() => setOpen(false)}
+            type="button"
+            variant="default"
+          >
             Batal
-          </AlertDialogCancel>
+          </Button>
 
-          <AlertDialogAction
+          <Button
             disabled={isLoading}
             onClick={handleDeleteTask}
             type="button"
+            variant="outline"
+            className="bg-transparent hover:bg-transparent border-[#D9534F] text-[#D9534F] hover:text-[#D9534F]"
           >
             {isLoading ? "Loading..." : "Hapus"}
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

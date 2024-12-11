@@ -102,23 +102,28 @@ function UpdateToDoListDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-sm">
+      <DialogContent className="max-w-sm [&_svg]:size-5">
         <DialogHeader>
-          <DialogTitle>Ubah Ibadah</DialogTitle>
+          <DialogTitle className="text-[#363636] font-bold text-lg">
+            Ubah Ibadah
+          </DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             autoComplete="off"
-            className="space-y-8"
+            className="space-y-6"
           >
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nama Ibadah</FormLabel>
+                  <FormLabel className="text-black font-bold">
+                    Nama Ibadah
+                  </FormLabel>
+
                   <FormControl>
                     <Input disabled={isLoading} type="text" {...field} />
                   </FormControl>
@@ -132,7 +137,10 @@ function UpdateToDoListDialog({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Deskripsi Ibadah</FormLabel>
+                  <FormLabel className="text-black font-bold">
+                    Deskripsi Ibadah
+                  </FormLabel>
+
                   <FormControl>
                     <Textarea disabled={isLoading} {...field} />
                   </FormControl>
@@ -141,8 +149,12 @@ function UpdateToDoListDialog({
               )}
             />
 
-            <Button disabled={isLoading} type="submit" className="w-full">
-              {isLoading ? "Loading..." : "Submit"}
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className="bg-[#6594AB] hover:bg-[#6594AB]/90 font-semibold w-full"
+            >
+              {isLoading ? "Loading..." : "Ubah"}
             </Button>
           </form>
         </Form>
