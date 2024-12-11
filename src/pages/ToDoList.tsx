@@ -32,6 +32,7 @@ export default function ToDoList() {
   const createAxiosInstance = useAxios();
 
   useEffect(() => {
+    if (toDoLists !== undefined) return;
     (async () => {
       setIsLoading(true);
       try {
@@ -54,7 +55,7 @@ export default function ToDoList() {
         setIsLoading(false);
       }
     })();
-  }, [setToDoLists, createAxiosInstance, toast, user]);
+  }, [setToDoLists, createAxiosInstance, toast, user, toDoLists]);
 
   if (isLoading) {
     return (
