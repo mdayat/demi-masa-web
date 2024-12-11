@@ -57,7 +57,9 @@ function ToDoListItem({ id, name, description, checked }: ToDoList) {
 
       if (resp.status === 200) {
         toast({
-          description: "Berhasil mencentang ibadah.",
+          description: checked
+            ? "Berhasil tidak mencentang ibadah."
+            : "Berhasil mencentang ibadah.",
           variant: "default",
         });
 
@@ -74,7 +76,9 @@ function ToDoListItem({ id, name, description, checked }: ToDoList) {
     } catch (error) {
       console.error(new Error("failed to update to-do list", { cause: error }));
       toast({
-        description: "Gagal mencentang ibadah.",
+        description: checked
+          ? "Gagal tidak mencentang ibadah."
+          : "Gagal mencentang ibadah.",
         variant: "destructive",
       });
     } finally {
@@ -83,29 +87,28 @@ function ToDoListItem({ id, name, description, checked }: ToDoList) {
   };
 
   return (
-    <div>
+    <div className="break-words border border-[#C2C2C2] rounded-lg p-5">
       <div className="flex justify-between items-center">
-        <h3>{name}</h3>
+        <h3 className="text-[#363636] font-bold text-lg">{name}</h3>
         <Button
           disabled={isLoading}
           onClick={handleToggleToDoList}
           type="button"
+          variant="link"
+          className="[&_svg]:size-6"
         >
-          {checked ? (
-            <CheckboxIcon className="w-6 h-6" />
-          ) : (
-            <BoxIcon className="w-6 h-6" />
-          )}
+          {checked ? <CheckboxIcon /> : <BoxIcon />}
         </Button>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center my-2">
         <Button
           onClick={() => setUpdateDialogOpened(true)}
           type="button"
-          className="flex justify-between items-center gap-1"
+          variant="link"
+          className="text-[#7B7B7B] hover:no-underline font-semibold flex items-center gap-2 min-w-16 p-0"
         >
-          <Pencil1Icon className="w-4 h-4" />
+          <Pencil1Icon />
           Edit
         </Button>
 
@@ -122,12 +125,15 @@ function ToDoListItem({ id, name, description, checked }: ToDoList) {
           <></>
         )}
 
+        <div className="bg-[#7B7B7B] w-0.5 h-5 mx-4"></div>
+
         <Button
           onClick={() => setDeleteDialogOpened(true)}
           type="button"
-          className="flex justify-between items-center gap-1"
+          variant="link"
+          className="text-[#7B7B7B] hover:no-underline font-semibold flex items-center gap-2 min-w-16 p-0"
         >
-          <TrashIcon className="w-4 h-4" />
+          <TrashIcon />
           Hapus
         </Button>
 
@@ -143,7 +149,7 @@ function ToDoListItem({ id, name, description, checked }: ToDoList) {
         )}
       </div>
 
-      <p>{description}</p>
+      <p className="text-[#7B7B7B]">{description}</p>
     </div>
   );
 }
