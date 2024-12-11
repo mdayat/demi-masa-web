@@ -1,15 +1,18 @@
 import {
   AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@components/shadcn/AlertDialog";
-import { Button } from "@components/shadcn/Button";
+import { buttonVariants } from "@components/shadcn/Button";
 import { useToast } from "@hooks/shadcn/useToast";
 import { useAxios } from "@hooks/useAxios";
 import { useStore } from "@hooks/useStore";
+import { cn } from "@libs/shadcn";
 import { useState, type Dispatch, type SetStateAction } from "react";
 
 interface DeleteToDoListDialogProps {
@@ -78,25 +81,29 @@ function DeleteToDoListDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <AlertDialogFooter>
-          <Button
+        <AlertDialogFooter className="gap-4">
+          <AlertDialogCancel
             disabled={isLoading}
-            onClick={() => setOpen(false)}
+            className={cn(
+              buttonVariants({ variant: "default" }),
+              "bg-[#363636] hover:bg-[#363636] hover:text-white w-full"
+            )}
             type="button"
-            variant="default"
           >
             Batal
-          </Button>
+          </AlertDialogCancel>
 
-          <Button
+          <AlertDialogAction
             disabled={isLoading}
             onClick={handleDeleteTask}
+            className={cn(
+              buttonVariants({ variant: "outline" }),
+              "bg-transparent hover:bg-transparent border-[#D9534F] text-[#D9534F] hover:text-[#D9534F] w-full"
+            )}
             type="button"
-            variant="outline"
-            className="bg-transparent hover:bg-transparent border-[#D9534F] text-[#D9534F] hover:text-[#D9534F]"
           >
             {isLoading ? "Loading..." : "Hapus"}
-          </Button>
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
