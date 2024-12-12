@@ -46,11 +46,25 @@ interface ToDoList {
   checked: boolean;
 }
 
+type PrayerStatus = "ON_TIME" | "LATE" | "MISSED";
+
+interface Prayer {
+  id: string;
+  name: string;
+  time: number;
+  time_zone: IndonesiaTimeZone;
+  status: PrayerStatus;
+  year: number;
+  month: number;
+  day: number;
+}
+
 interface States {
   user: User | undefined;
   transactions: Transaction[] | undefined;
   subscriptionPlans: SubscriptionPlanMap | undefined;
   toDoLists: ToDoList[] | undefined;
+  prayers: Prayer[] | undefined;
 }
 
 interface Actions {
@@ -77,6 +91,12 @@ interface Actions {
       | ToDoList[]
       | undefined
   ) => void;
+  setPrayers: (
+    Prayers:
+      | ((Prayers: Prayer[] | undefined) => Prayer[] | undefined)
+      | Prayer[]
+      | undefined
+  ) => void;
 }
 
 const useStore = create<States & Actions>((set) => ({
@@ -84,6 +104,7 @@ const useStore = create<States & Actions>((set) => ({
   transactions: undefined,
   subscriptionPlans: undefined,
   toDoLists: undefined,
+  prayers: undefined,
   setUser: (user) => {
     set((state) => {
       if (typeof user === "function") {
@@ -120,6 +141,16 @@ const useStore = create<States & Actions>((set) => ({
       return { toDoLists };
     });
   },
+  setPrayers: (prayers) => {
+    set((state) => {
+      if (typeof prayers === "function") {
+        return {
+          prayers: prayers(state.prayers),
+        };
+      }
+      return { prayers };
+    });
+  },
 }));
 
 export { useStore, WIBTimeZone, WITATimeZone, WITTimeZone };
@@ -132,4 +163,6 @@ export type {
   SubscriptionPlanMap,
   IndonesiaTimeZone,
   ToDoList,
+  Prayer,
+  PrayerStatus,
 };
