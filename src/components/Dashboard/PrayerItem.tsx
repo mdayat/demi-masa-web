@@ -3,10 +3,10 @@ import { useToast } from "@hooks/shadcn/useToast";
 import { useAxios } from "@hooks/useAxios";
 import { useStore, type Prayer, type PrayerStatus } from "@hooks/useStore";
 import { BoxIcon, CheckboxIcon } from "@radix-ui/react-icons";
+import { getCurrentTime } from "@utils/index";
 import { useState } from "react";
-import { getCurrentUnixTime } from "./PrayerList";
 
-interface PrayerItemProps extends Omit<Prayer, "status"> {
+interface PrayerItemProps extends Prayer {
   currentUnixTime: number;
 }
 
@@ -15,7 +15,7 @@ function PrayerItem({
   id,
   name,
   unix_time,
-  checked_at,
+  status,
 }: PrayerItemProps) {
   const user = useStore((state) => state.user);
   const setPrayers = useStore((state) => state.setPrayers);
@@ -26,8 +26,11 @@ function PrayerItem({
 
   const handleCheckPrayer = async () => {
     setIsLoading(true);
+    const checkedAt = Math.round(
+      getCurrentTime(user!.timeZone as string).getTime() / 1000
+    );
+
     try {
-      const checkedAt = getCurrentUnixTime(user!.timeZone as string);
       const resp = await createAxiosInstance().put<{ status: PrayerStatus }>(
         `/prayers/${id}`,
         {
@@ -53,9 +56,7 @@ function PrayerItem({
 
         setPrayers((prayers) => {
           const idx = prayers!.findIndex((item) => item.id === id);
-
           prayers![idx].status = resp.data.status;
-          prayers![idx].checked_at = checkedAt;
           return prayers;
         });
       } else if (resp.status === 400) {
@@ -75,27 +76,23 @@ function PrayerItem({
   };
 
   return (
-    <div className="break-words border border-[#E1E1E1] rounded-lg p-3">
-      <div className="flex justify-between items-center">
-        <h4 className="text-[#363636] font-bold text-lg">Salat {name}</h4>
-        <Button
-          disabled={
-            isLoading || currentUnixTime < unix_time || checked_at !== undefined
-          }
-          onClick={handleCheckPrayer}
-          type="button"
-          variant="link"
-          className="[&_svg]:size-6"
-        >
-          {checked_at !== undefined ? (
-            <CheckboxIcon className="text-[#1F1F1F]" />
-          ) : (
-            <BoxIcon className="text-[#1F1F1F]" />
-          )}
-        </Button>
-      </div>
-
-      <span className="text-[#363636] text-sm font-medium">{name}</span>
+    <div className="break-words border border-[#E1E1E1] rounded-lg flex justify-between items-center p-3">
+      <h4 className="text-[#363636] font-bold">Salat {name}</h4>
+      <Button
+        disabled={
+          isLoading || currentUnixTime < unix_time || status !== undefined
+        }
+        onClick={handleCheckPrayer}
+        type="button"
+        variant="link"
+        className="[&_svg]:size-6"
+      >
+        {status !== undefined ? (
+          <CheckboxIcon className="text-[#1F1F1F]" />
+        ) : (
+          <BoxIcon className="text-[#1F1F1F]" />
+        )}
+      </Button>
     </div>
   );
 }
