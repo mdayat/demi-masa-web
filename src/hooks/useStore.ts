@@ -52,8 +52,7 @@ interface Prayer {
   id: string;
   name: string;
   unix_time: number;
-  status: PrayerStatus;
-  checked_at: number | undefined;
+  status: PrayerStatus | undefined;
 }
 
 interface States {

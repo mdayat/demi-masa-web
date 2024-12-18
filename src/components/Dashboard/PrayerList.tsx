@@ -2,7 +2,7 @@ import { Skeleton } from "@components/shadcn/Skeleton";
 import { useToast } from "@hooks/shadcn/useToast";
 import { useAxios } from "@hooks/useAxios";
 import { useStore, type Prayer } from "@hooks/useStore";
-import { toZonedTime } from "date-fns-tz";
+import { getCurrentTime } from "@utils/index";
 import { lazy, useEffect, useMemo, useState } from "react";
 
 const PrayerItem = lazy(() =>
@@ -11,25 +11,18 @@ const PrayerItem = lazy(() =>
   }))
 );
 
-function getCurrentUnixTime(timeZone: string): number {
-  const now = new Date();
-  const timeZoneDate = toZonedTime(now, timeZone);
-  return Math.round(timeZoneDate.getTime() / 1000);
-}
-
 interface PrayerCompletionIndicatorProps
-  extends Pick<Prayer, "status" | "checked_at" | "unix_time"> {
+  extends Pick<Prayer, "status" | "unix_time"> {
   currentUnixTime: number;
 }
 
 function PrayerCompletionIndicator({
   currentUnixTime,
-  checked_at,
   status,
   unix_time,
 }: PrayerCompletionIndicatorProps) {
   const boxColor = useMemo((): string => {
-    if (currentUnixTime > unix_time && checked_at !== undefined) {
+    if (currentUnixTime > unix_time && status !== undefined) {
       if (status === "ON_TIME") {
         return "bg-[#238471]";
       } else if (status === "LATE") {
@@ -40,7 +33,7 @@ function PrayerCompletionIndicator({
     } else {
       return "bg-[#ECECEC]";
     }
-  }, [checked_at, status, unix_time, currentUnixTime]);
+  }, [status, unix_time, currentUnixTime]);
 
   return <div className={`${boxColor} w-12 h-6`}></div>;
 }
@@ -54,19 +47,21 @@ function PrayerList() {
   const { toast } = useToast();
   const createAxiosInstance = useAxios();
 
-  const currentUnixTime = useMemo(
-    (): number => getCurrentUnixTime(user!.timeZone as string),
-    [user]
-  );
+  const currentUnixTime = useMemo((): number => {
+    return Math.round(
+      getCurrentTime(user!.timeZone as string).getTime() / 1000
+    );
+  }, [user]);
 
   useEffect(() => {
     if (prayers !== undefined) return;
     (async () => {
       setIsLoading(true);
       try {
-        const resp = await createAxiosInstance().get<Prayer[]>("/prayers", {
-          headers: { Authorization: `Bearer ${user!.idToken}` },
-        });
+        const resp = await createAxiosInstance().get<Prayer[]>(
+          "/prayers/today",
+          { headers: { Authorization: `Bearer ${user!.idToken}` } }
+        );
 
         if (resp.status === 200) {
           setPrayers(resp.data);
@@ -117,7 +112,7 @@ function PrayerList() {
 
   return (
     <div className="border border-[#E1E1E1] rounded-3xl p-6 mx-6">
-      <h2 className="text-[#1A6355] font-bold mb-2">Salat</h2>
+      <h2 className="text-[#1A6355] font-bold text-xl mb-3">Daftar Salat</h2>
 
       <div className="flex flex-col gap-3 mb-6">
         {prayers.map((item) => (
@@ -125,8 +120,8 @@ function PrayerList() {
             key={item.id + ":prayer"}
             id={item.id}
             name={item.name}
+            status={item.status}
             unix_time={item.unix_time}
-            checked_at={item.checked_at}
             currentUnixTime={currentUnixTime}
           />
         ))}
@@ -137,7 +132,6 @@ function PrayerList() {
         {prayers.map((item) => (
           <PrayerCompletionIndicator
             key={item.id + ":completion"}
-            checked_at={item.checked_at}
             currentUnixTime={currentUnixTime}
             status={item.status}
             unix_time={item.unix_time}
@@ -148,4 +142,4 @@ function PrayerList() {
   );
 }
 
-export { PrayerList, getCurrentUnixTime };
+export { PrayerList };
