@@ -48,6 +48,7 @@ interface TimeZoneFormProps {
 function TimeZoneForm({ setOpen }: TimeZoneFormProps) {
   const user = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
+  const setPrayers = useStore((state) => state.setPrayers);
 
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -81,6 +82,10 @@ function TimeZoneForm({ setOpen }: TimeZoneFormProps) {
           ...user!,
           timeZone: values.timeZone,
         }));
+
+        setPrayers(() => {
+          return undefined;
+        });
 
         if (setOpen !== undefined) {
           setOpen(false);
