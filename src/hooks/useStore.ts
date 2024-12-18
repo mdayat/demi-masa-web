@@ -51,12 +51,9 @@ type PrayerStatus = "ON_TIME" | "LATE" | "MISSED";
 interface Prayer {
   id: string;
   name: string;
-  time: number;
-  time_zone: IndonesiaTimeZone;
+  unix_time: number;
   status: PrayerStatus;
-  year: number;
-  month: number;
-  day: number;
+  checked_at: number | undefined;
 }
 
 interface States {
