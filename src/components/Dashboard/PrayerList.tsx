@@ -127,7 +127,10 @@ function PrayerList() {
         ))}
       </div>
 
-      <h3 className="text-[#363636] mb-3">Ketepatan Salat Hari ini</h3>
+      <h3 className="text-[#363636] font-medium mb-3">
+        Ketepatan salat hari ini
+      </h3>
+
       <div className="flex justify-between items-center gap-2">
         {prayers.map((item) => (
           <PrayerCompletionIndicator

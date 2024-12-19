@@ -19,6 +19,7 @@ function PrayerItem({
 }: PrayerItemProps) {
   const user = useStore((state) => state.user);
   const setPrayers = useStore((state) => state.setPrayers);
+  const setPrayerStatistic = useStore((state) => state.setPrayerStatistic);
 
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -58,6 +59,20 @@ function PrayerItem({
           const idx = prayers!.findIndex((item) => item.id === id);
           prayers![idx].status = resp.data.status;
           return prayers;
+        });
+
+        setPrayerStatistic((prayerStatistic) => {
+          const statistic = prayerStatistic!.get(name)!;
+          if (resp.data.status === "ON_TIME") {
+            statistic[2]++;
+          } else if (resp.data.status === "LATE") {
+            statistic[1]++;
+          } else {
+            statistic[0]++;
+          }
+
+          prayerStatistic!.set(name, statistic);
+          return prayerStatistic;
         });
       } else if (resp.status === 400) {
         throw new Error("invalid request body");
