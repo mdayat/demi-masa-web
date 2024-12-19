@@ -1,6 +1,5 @@
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -8,11 +7,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@components/shadcn/AlertDialog";
+import { Button } from "@components/shadcn/Button";
 import { Skeleton } from "@components/shadcn/Skeleton";
 import { useToast } from "@hooks/shadcn/useToast";
 import { useAxios } from "@hooks/useAxios";
 import {
   useStore,
+  type SubscriptionPlan,
   type SubscriptionPlanMap,
   type Transaction,
 } from "@hooks/useStore";
@@ -34,18 +35,16 @@ function SubscriptionPlanSkeleton() {
   );
 }
 
-interface SubscriptionPlanButtonProps {
-  id: string;
-  price: number;
-  durationInMonths: number;
+interface SubscriptionPlanButtonProps extends SubscriptionPlan {
   couponCode: string;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 function SubscriptionPlanButton({
   id,
+  name,
   price,
-  durationInMonths,
+  duration_in_months,
   couponCode,
   setOpen,
 }: SubscriptionPlanButtonProps) {
@@ -64,7 +63,10 @@ function SubscriptionPlanButton({
       const resp = await createAxiosInstance().post<Transaction>(
         "/transactions",
         {
-          subscription_plan_id: id,
+          subs_plan_id: id,
+          subs_plan_name: name,
+          subs_plan_price: price,
+          subs_plan_duration: duration_in_months,
           coupon_code: couponCode,
           customer_name: user?.name,
           customer_email: user?.email,
@@ -128,7 +130,9 @@ function SubscriptionPlanButton({
           <span className="font-bold text-[26px]">
             {Intl.NumberFormat("id-ID").format(price)}-
           </span>
-          <span className="font-medium text-xs">/{durationInMonths} Bulan</span>
+          <span className="font-medium text-xs">
+            /{duration_in_months} Bulan
+          </span>
         </span>
       </button>
 
@@ -136,7 +140,7 @@ function SubscriptionPlanButton({
         <AlertDialogContent className="max-w-sm mx-auto">
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Apakah kamu yakin ingin berlangganan {durationInMonths} bulan?
+              Apakah kamu yakin ingin berlangganan {duration_in_months} bulan?
             </AlertDialogTitle>
 
             <AlertDialogDescription asChild>
@@ -173,14 +177,14 @@ function SubscriptionPlanButton({
               Batal
             </AlertDialogCancel>
 
-            <AlertDialogAction
+            <Button
               disabled={isLoading}
               onClick={handleCreateTx}
               type="button"
               className="bg-[#BF8E50] hover:bg-[#BF8E50]/90 text-white hover:text-white w-full"
             >
               {isLoading ? "Loading..." : "Proses Transaksi"}
-            </AlertDialogAction>
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -219,8 +223,9 @@ function SubscriptionPlans({
               <SubscriptionPlanButton
                 key={item.id}
                 id={item.id}
+                name={item.name}
                 price={item.price}
-                durationInMonths={item.duration_in_months}
+                duration_in_months={item.duration_in_months}
                 couponCode={couponCode}
                 setOpen={setOpen}
               />
