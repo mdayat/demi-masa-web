@@ -1,4 +1,5 @@
 import { PrayerList } from "@components/Dashboard/PrayerList";
+import { PrayerReport } from "@components/Dashboard/PrayerReport";
 
 export default function Dashboard() {
   return (
@@ -14,6 +15,7 @@ export default function Dashboard() {
       </div>
 
       <PrayerList />
+      <PrayerReport />
     </>
   );
 }

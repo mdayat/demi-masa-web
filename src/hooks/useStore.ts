@@ -47,13 +47,20 @@ interface ToDoList {
 }
 
 type PrayerStatus = "ON_TIME" | "LATE" | "MISSED";
+type PrayerName = "Subuh" | "Zuhur" | "Asar" | "Magrib" | "Isya";
 
 interface Prayer {
   id: string;
-  name: string;
+  name: PrayerName;
   unix_time: number;
   status: PrayerStatus | undefined;
 }
+
+// the value of the map will only have 3 length
+// the first index is the number of missed salat
+// the second index is the number of late salat
+// the third index is the number of on time salat
+type PrayerStatistic = Map<PrayerName, number[]>;
 
 interface States {
   user: User | undefined;
@@ -61,6 +68,7 @@ interface States {
   subscriptionPlans: SubscriptionPlanMap | undefined;
   toDoLists: ToDoList[] | undefined;
   prayers: Prayer[] | undefined;
+  prayerStatistic: PrayerStatistic | undefined;
 }
 
 interface Actions {
@@ -82,15 +90,23 @@ interface Actions {
       | undefined
   ) => void;
   setToDoLists: (
-    ToDoLists:
-      | ((ToDoLists: ToDoList[] | undefined) => ToDoList[] | undefined)
+    toDoLists:
+      | ((toDoLists: ToDoList[] | undefined) => ToDoList[] | undefined)
       | ToDoList[]
       | undefined
   ) => void;
   setPrayers: (
-    Prayers:
-      | ((Prayers: Prayer[] | undefined) => Prayer[] | undefined)
+    prayers:
+      | ((prayers: Prayer[] | undefined) => Prayer[] | undefined)
       | Prayer[]
+      | undefined
+  ) => void;
+  setPrayerStatistic: (
+    prayerStatistic:
+      | ((
+          prayerStatistic: PrayerStatistic | undefined
+        ) => PrayerStatistic | undefined)
+      | PrayerStatistic
       | undefined
   ) => void;
 }
@@ -101,6 +117,7 @@ const useStore = create<States & Actions>((set) => ({
   subscriptionPlans: undefined,
   toDoLists: undefined,
   prayers: undefined,
+  prayerStatistic: undefined,
   setUser: (user) => {
     set((state) => {
       if (typeof user === "function") {
@@ -147,6 +164,16 @@ const useStore = create<States & Actions>((set) => ({
       return { prayers };
     });
   },
+  setPrayerStatistic: (prayerStatistic) => {
+    set((state) => {
+      if (typeof prayerStatistic === "function") {
+        return {
+          prayerStatistic: prayerStatistic(state.prayerStatistic),
+        };
+      }
+      return { prayerStatistic };
+    });
+  },
 }));
 
 export { useStore, WIBTimeZone, WITATimeZone, WITTimeZone };
@@ -161,4 +188,6 @@ export type {
   ToDoList,
   Prayer,
   PrayerStatus,
+  PrayerStatistic,
+  PrayerName,
 };
