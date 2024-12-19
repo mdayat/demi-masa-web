@@ -41,6 +41,7 @@ const PricingListDialog = lazy(() =>
 );
 
 export default function Profile() {
+  const subsDuration = useStore((state) => state.subsDuration);
   const user = useStore((state) => state.user);
   let timeZone = "";
   if (user?.timeZone === "Asia/Jakarta") {
@@ -123,6 +124,10 @@ export default function Profile() {
       {user?.accountType === "PREMIUM" ? (
         <div className="bg-[#BF8E50] rounded-2xl p-6 mx-6">
           <Badge className="bg-white hover:bg-white text-black">Premium</Badge>
+
+          <p className="text-white text-sm mt-3.5">
+            Berlaku hingga: <strong>{subsDuration}</strong>
+          </p>
 
           <Button
             disabled

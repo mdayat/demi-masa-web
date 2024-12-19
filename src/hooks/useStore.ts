@@ -69,6 +69,7 @@ interface States {
   toDoLists: ToDoList[] | undefined;
   prayers: Prayer[] | undefined;
   prayerStatistic: PrayerStatistic | undefined;
+  subsDuration: string;
 }
 
 interface Actions {
@@ -109,6 +110,7 @@ interface Actions {
       | PrayerStatistic
       | undefined
   ) => void;
+  setSubsDuration: (prayerStatistic: string) => void;
 }
 
 const useStore = create<States & Actions>((set) => ({
@@ -118,6 +120,7 @@ const useStore = create<States & Actions>((set) => ({
   toDoLists: undefined,
   prayers: undefined,
   prayerStatistic: undefined,
+  subsDuration: "",
   setUser: (user) => {
     set((state) => {
       if (typeof user === "function") {
@@ -172,6 +175,11 @@ const useStore = create<States & Actions>((set) => ({
         };
       }
       return { prayerStatistic };
+    });
+  },
+  setSubsDuration: (subsDuration) => {
+    set(() => {
+      return { subsDuration };
     });
   },
 }));
