@@ -59,7 +59,7 @@ function PrayerList() {
       setIsLoading(true);
       try {
         const resp = await createAxiosInstance().get<Prayer[]>(
-          "/prayers/today",
+          `/prayers/today?time_zone=${user!.timeZone}`,
           { headers: { Authorization: `Bearer ${user!.idToken}` } }
         );
 
