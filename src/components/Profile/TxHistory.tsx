@@ -3,6 +3,7 @@ import { Button } from "@components/shadcn/Button";
 import { useToast } from "@hooks/shadcn/useToast";
 import { useAxios } from "@hooks/useAxios";
 import { useStore, type Transaction } from "@hooks/useStore";
+import { toZonedTime } from "date-fns-tz";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 
@@ -34,7 +35,9 @@ function TxHistoryItem({
   index,
   txLength,
 }: TxHistoryItemProps) {
+  const user = useStore((state) => state.user);
   const setSubsDuration = useStore((state) => state.setSubsDuration);
+
   const secondsInMonth = 60 * 60 * 24 * 30;
   const totalDurationInMs = secondsInMonth * duration_in_months * 1000;
 
@@ -43,7 +46,10 @@ function TxHistoryItem({
     new Date(paid_at).getTime() + totalDurationInMs
   );
 
-  const subsDurationISOString = formatDate(subsDurationTime.toISOString());
+  const subsDurationISOString = formatDate(
+    toZonedTime(subsDurationTime, user!.timeZone!).toISOString()
+  );
+
   if (
     Math.round(subsDurationTime.getTime() / 1000) >
     Math.round(currentTime.getTime() / 1000)
@@ -70,7 +76,9 @@ function TxHistoryItem({
 
       <p className="text-[#7B7B7B] font-medium text-sm my-4">
         Berlaku hingga:&nbsp;
-        {status === "PAID" ? subsDurationISOString : formatDate(expired_at)}
+        {status === "PAID"
+          ? subsDurationISOString
+          : formatDate(toZonedTime(expired_at, user!.timeZone!).toISOString())}
       </p>
 
       <div className="flex justify-between items-center">
