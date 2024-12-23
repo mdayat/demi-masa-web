@@ -5,6 +5,7 @@ import { auth } from "@libs/firebase";
 import { onAuthStateChanged } from "@firebase/auth";
 import { useToast } from "./shadcn/useToast";
 
+const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 function useAxios() {
   const { toast } = useToast();
 
@@ -15,7 +16,7 @@ function useAxios() {
 
       const axiosInstance = axios.create({
         signal: controller.signal,
-        baseURL: "http://localhost",
+        baseURL: VITE_BACKEND_URL,
         validateStatus: (status) => {
           return status >= 200 && status < 500;
         },
